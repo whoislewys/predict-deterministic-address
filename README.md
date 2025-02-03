@@ -1,6 +1,13 @@
 ## Predict Deterministic Address
 Minimal JavaScript version of [Clones.predictDeterministicAddress](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/a6b8366980d8b28cbe4be7f1798719f0fac4cac1/contracts/proxy/Clones.sol#L61) from OpenZeppelin
 
+## Development
+
+```
+npm i
+npm run test
+```
+
 ## Usage
 Installation:
 ```bash

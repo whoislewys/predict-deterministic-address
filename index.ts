@@ -1,5 +1,5 @@
 import type { Address, Hex } from 'viem'
-import { encodePacked, getAddress, keccak256, toBytes } from 'viem'
+import { encodePacked, getAddress, keccak256, toBytes, toRlp } from 'viem'
 
 // Adapted from https://github.com/LuKks/predict-deterministic-address/
 // moved from using '@noble/hashes/sha3' for cryptography to viem
@@ -32,4 +32,27 @@ function getVM(vm?: string) {
 function removeHexStart(value: Hex | string): string {
   if (value.startsWith('0x')) return value.slice(2)
   return value
+}
+
+
+/**
+ * Predicts the address of a contract deployed via CREATE3.
+ * The address creation formula is: keccak256(rlp([keccak256(0xff ++ address(this) ++ _salt ++ keccak256(childBytecode))[12:], 0x01]))
+ */
+export function predictCreate3Address(
+  deployer: string,
+  salt: string,
+): string {
+  const create3ProxyBytecodeHash = "0x21c35dbe1b344a2488cf3321d6ce542f8e9f305544ff09e4993a62319a497c1f" // aka childBytecode
+
+  // keccak256(0xff ++ address(this) ++ _salt ++ keccak256(childBytecode))
+  const proxyHash = keccak256(
+    `0x${['ff', removeHexStart(deployer), removeHexStart(salt), removeHexStart(create3ProxyBytecodeHash)].join('')}`
+  )
+
+  const proxy = getAddress(`0x${proxyHash.slice(-40)}`)
+
+  const finalHash = keccak256(toRlp([proxy, '0x01']))
+
+  return getAddress(`0x${finalHash.slice(-40)}`)
 }
