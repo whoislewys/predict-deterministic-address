@@ -2,7 +2,7 @@
   "name": "@whoislewys/predict-deterministic-address",
   "author": "whoislewys",
   "license": "ISC",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "homepage": "https://github.com/whoislewys/predict-deterministic-address#readme",
   "description": "Minimal JavaScript ports of CREATE2 and CREATE3 logic for address prediction.",
   "keywords": [
